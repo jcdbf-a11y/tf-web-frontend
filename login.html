@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chapelaria Trapalhões | Login</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header>
@@ -19,18 +20,19 @@
     </nav>
   </header>
 
-  <main>
-    <section>
+  <main class="login-page">
+    <section class="login-card">
+      <img class="login-logo" src="img/logo.png" alt="Logo da Chapelaria Trapalhões" width="120" height="120">
       <h1>Login do administrador</h1>
       <p>Acesso restrito a administradores da loja.</p>
       <form id="form-login" action="#" method="post">
         <div>
           <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" required>
+          <input type="email" id="email" name="email" placeholder="seuemail@exemplo.com" required>
         </div>
         <div>
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" required>
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
         </div>
         <button type="submit">Entrar</button>
       </form>

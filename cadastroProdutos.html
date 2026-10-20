@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapelaria Trapalhões | Cadastro de Proutos</title>
+</head>
+<body>
+  <header>
+    <a href="index.html">Chapelaria Trapalhões</a>
+    <nav aria-label="Navegação principal">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="catalogo.html">Catálogo</a></li>
+        <li><a href="servicos.html">Serviços</a></li>
+        <li><a href="cadastro.html" aria-current="page">Cadastro de Produtos</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Cadastro</h1>
+    <p>Área para administradores cadastrarem novos produtos e serviços.</p>
+
+    <section>
+      <h2>Cadastrar item</h2>
+      <form id="form-item" action="#" method="post">
+        <div>
+          <label for="item-nome">Nome</label>
+          <input type="text" id="item-nome" name="nome" required>
+        </div>
+        <div>
+          <label for="item-descricao">Descrição</label>
+          <textarea id="item-descricao" name="descricao" rows="4" required></textarea>
+        </div>
+        <div>
+          <label for="item-preco">Preço (R$)</label>
+          <input type="number" id="item-preco" name="preco" min="0" step="0.01" required>
+        </div>
+        <div>
+          <label for="item-estoque">Estoque</label>
+          <input type="number" id="item-estoque" name="estoque" min="0" step="1" required>
+        </div>
+        <div>
+          <label for="item-imagemUrl">URL da imagem</label>
+          <input type="url" id="item-imagemUrl" name="imagemUrl">
+        </div>
+        <div>
+          <label for="item-tipo">Tipo</label>
+          <select id="item-tipo" name="tipo" required>
+            <option value="">Selecione</option>
+            <option value="CHAPEU_PRONTO">Chapéu pronto</option>
+            <option value="ITEM_MONTAGEM">Item para montagem</option>
+          </select>
+        </div>
+        <button type="submit">Cadastrar item</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Cadastrar serviço</h2>
+      <form id="form-servico" action="#" method="post">
+        <div>
+          <label for="servico-nome">Nome</label>
+          <input type="text" id="servico-nome" name="nome" required>
+        </div>
+        <div>
+          <label for="servico-caracteristicas">Características</label>
+          <textarea id="servico-caracteristicas" name="caracteristicas" rows="4" required></textarea>
+        </div>
+        <div>
+          <label for="servico-precoEstimado">Preço estimado (R$)</label>
+          <input type="number" id="servico-precoEstimado" name="precoEstimado" min="0" step="0.01">
+        </div>
+        <button type="submit">Cadastrar serviço</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Breno Henrique, Enzo Noah, Gustavo Santos, Júlio César e Matheus Henrique.</p>
+  </footer>
+</body>
+</html>
