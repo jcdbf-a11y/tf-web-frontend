@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapelaria Trapalhões | Catálogo</title>
+</head>
+<body>
+  <header>
+    <a href="index.html">Chapelaria Trapalhões</a>
+    <nav aria-label="Navegação principal">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="catalogo.html" aria-current="page">Catálogo</a></li>
+        <li><a href="servicos.html">Serviços</a></li>
+        <li><a href="cadastroProdutos.html">Cadastro de Produtos</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Catálogo</h1>
+
+    <section>
+      <h2>Filtrar produtos</h2>
+      <form id="form-filtro" action="catalogo.html" method="get">
+        <label for="filtro-tipo">Tipo</label>
+        <select id="filtro-tipo" name="tipo">
+          <option value="">Todos</option>
+          <option value="CHAPEU_PRONTO">Chapéus prontos</option>
+          <option value="ITEM_MONTAGEM">Itens para montagem</option>
+        </select>
+        <button type="submit">Filtrar</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Chapéus prontos</h2>
+      <article>
+        <h3>Chapéu de couro</h3>
+        <img src="https://picsum.photos/seed/catalogo-couro/400/300" alt="Chapéu de couro artesanal" width="400" height="300">
+        <p>Chapéu artesanal de couro, com acabamento reforçado.</p>
+        <p>Preço: R$ 180,00</p>
+        <p>Estoque: 13 unidades</p>
+      </article>
+      <article>
+        <h3>Chapéu fedora</h3>
+        <img src="https://picsum.photos/seed/catalogo-fedora/400/300" alt="Chapéu fedora de edição limitada" width="400" height="300">
+        <p>Chapéu fedora de edição limitada.</p>
+        <p>Preço: R$ 150,00</p>
+        <p>Estoque: 6 unidades</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>Itens para montagem</h2>
+      <article>
+        <h3>Fita decorativa</h3>
+        <img src="https://picsum.photos/seed/catalogo-fita/400/300" alt="Fita decorativa para chapéu" width="400" height="300">
+        <p>Fita para personalizar o seu chapéu.</p>
+        <p>Preço: R$ 25,00</p>
+        <p>Estoque: 40 unidades</p>
+      </article>
+      <article>
+        <h3>Aba de couro</h3>
+        <img src="https://picsum.photos/seed/catalogo-aba/400/300" alt="Aba de couro reforçada para montagem" width="400" height="300">
+        <p>Aba reforçada de couro para montagem de chapéus.</p>
+        <p>Preço: R$ 60,00</p>
+        <p>Estoque: 15 unidades</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Breno Henrique, Enzo Noah, Gustavo Santos, Júlio César e Matheus Henrique.</p>
+  </footer>
+</body>
+</html>
