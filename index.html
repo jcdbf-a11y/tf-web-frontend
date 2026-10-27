@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chapelaria DM HATS | Início</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header>
-    <a href="index.html">Chapelaria DM HATS</a>
+    <a class="marca" href="index.html">Chapelaria DM HATS</a>
     <nav aria-label="Navegação principal">
       <ul>
         <li><a href="index.html" aria-current="page">Início</a></li>
@@ -20,36 +24,40 @@
   </header>
 
   <main>
-    <section>
-      <h1>Chapéus com estilo e tradição</h1>
-      <p>Conheça nossos chapéus prontos, os itens para montar o seu e os serviços de personalização e reparo.</p>
-      <p><a href="catalogo.html">Ver catálogo</a></p>
+    <section class="hero">
+      <div class="hero-texto">
+        <h1>Chapéus com estilo e tradição</h1>
+        <p>Conheça nossos chapéus prontos, os itens para montar o seu e os serviços de personalização e reparo.</p>
+        <p><a class="botao" href="catalogo.html">Ver catálogo</a></p>
+      </div>
       <img src="https://picsum.photos/seed/chapelaria-destaque/800/400" alt="Vitrine com chapéus variados" width="800" height="400">
     </section>
 
     <section>
       <h2>Como funciona</h2>
       <p>O site funciona como vitrine: você escolhe os produtos e serviços de interesse e finaliza o atendimento pelo nosso WhatsApp.</p>
-      <p><a href="https://wa.me/5500000000000">Falar pelo WhatsApp</a></p>
+      <p><a class="botao botao-contorno" href="https://wa.me/5500000000000" target="_blank" rel="noopener noreferrer">Falar pelo WhatsApp</a></p>
     </section>
 
     <section>
       <h2>Destaques</h2>
-      <article>
-        <h3>Chapéu de couro</h3>
-        <img src="https://picsum.photos/seed/chapeu-couro/400/300" alt="Chapéu de couro artesanal" width="400" height="300">
-        <p>Artesanal, com acabamento reforçado.</p>
-      </article>
-      <article>
-        <h3>Chapéu fedora</h3>
-        <img src="https://picsum.photos/seed/chapeu-fedora/400/300" alt="Chapéu fedora de edição limitada" width="400" height="300">
-        <p>Edição limitada para quem gosta de exclusividade.</p>
-      </article>
-      <article>
-        <h3>Personalização</h3>
-        <img src="https://picsum.photos/seed/chapeu-personalizacao/400/300" alt="Chapéu sendo personalizado sob medida" width="400" height="300">
-        <p>Ajuste de tamanho, cor e acabamento sob medida.</p>
-      </article>
+      <div class="cards">
+        <article>
+          <h3>Chapéu de couro</h3>
+          <img src="https://picsum.photos/seed/chapeu-couro/400/300" alt="Chapéu de couro artesanal" width="400" height="300">
+          <p>Artesanal, com acabamento reforçado.</p>
+        </article>
+        <article>
+          <h3>Chapéu fedora</h3>
+          <img src="https://picsum.photos/seed/chapeu-fedora/400/300" alt="Chapéu fedora de edição limitada" width="400" height="300">
+          <p>Edição limitada para quem gosta de exclusividade.</p>
+        </article>
+        <article>
+          <h3>Personalização</h3>
+          <img src="https://picsum.photos/seed/chapeu-personalizacao/400/300" alt="Chapéu sendo personalizado sob medida" width="400" height="300">
+          <p>Ajuste de tamanho, cor e acabamento sob medida.</p>
+        </article>
+      </div>
     </section>
   </main>
 

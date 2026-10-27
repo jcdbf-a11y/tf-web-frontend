@@ -1,0 +1,502 @@
+/* ==========================================================
+   1. VARIÁVEIS DO TEMA
+   ========================================================== */
+:root {
+  --cor-fundo: #f6efe6;
+  --cor-superficie: #ffffff;
+  --cor-primaria: #3b2a1e;
+  --cor-secundaria: #8b5a2b;
+  --cor-secundaria-escura: #6e4620;
+  --cor-destaque: #c8963e;
+  --cor-texto: #2b1f16;
+  --cor-texto-claro: #f6efe6;
+  --cor-borda: #e2d3c0;
+
+  --fonte-titulo: "Playfair Display", Georgia, serif;
+  --fonte-corpo: "Lato", "Segoe UI", Arial, sans-serif;
+
+  --espaco-1: 0.5rem;
+  --espaco-2: 1rem;
+  --espaco-3: 1.5rem;
+  --espaco-4: 2.5rem;
+
+  --raio: 12px;
+  --sombra: 0 4px 14px rgba(59, 42, 30, 0.12);
+  --sombra-forte: 0 10px 24px rgba(59, 42, 30, 0.2);
+  --transicao: 0.25s ease;
+}
+
+/* ==========================================================
+   2. RESET E BASE
+   ========================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--espaco-2);
+  font-family: var(--fonte-titulo);
+  line-height: 1.2;
+  color: var(--cor-primaria);
+}
+
+h1 {
+  font-size: 1.9rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+p {
+  margin: 0 0 var(--espaco-2);
+}
+
+a {
+  color: var(--cor-secundaria);
+  transition: color var(--transicao);
+}
+
+a:hover,
+a:focus {
+  color: var(--cor-destaque);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--cor-destaque);
+  outline-offset: 2px;
+}
+
+/* ==========================================================
+   3. CABEÇALHO E NAVEGAÇÃO (FLEXBOX)
+   ========================================================== */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-2);
+  padding: var(--espaco-2) var(--espaco-3);
+  background-color: var(--cor-primaria);
+  box-shadow: var(--sombra);
+}
+
+.marca {
+  font-family: var(--fonte-titulo);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cor-destaque);
+  text-decoration: none;
+}
+
+.marca:hover,
+.marca:focus {
+  color: var(--cor-texto-claro);
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--espaco-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav a {
+  display: block;
+  padding: 0.4rem 0.9rem;
+  color: var(--cor-texto-claro);
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background-color var(--transicao), color var(--transicao);
+}
+
+nav a:hover,
+nav a:focus {
+  color: #ffffff;
+  background-color: var(--cor-secundaria);
+}
+
+nav a[aria-current="page"] {
+  font-weight: 700;
+  color: var(--cor-primaria);
+  background-color: var(--cor-destaque);
+}
+
+/* ==========================================================
+   4. LAYOUT PRINCIPAL
+   ========================================================== */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--espaco-3) var(--espaco-2);
+}
+
+main > section {
+  margin-bottom: var(--espaco-4);
+}
+
+/* ==========================================================
+   5. DESTAQUE DA PÁGINA INICIAL (HERO)
+   ========================================================== */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+  padding: var(--espaco-3);
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria-escura));
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-forte);
+}
+
+.hero h1 {
+  font-size: 2rem;
+  color: var(--cor-destaque);
+}
+
+.hero p {
+  color: var(--cor-texto-claro);
+}
+
+.hero img {
+  width: 100%;
+  border-radius: var(--raio);
+}
+
+/* ==========================================================
+   6. CARDS (GRID)
+   ========================================================== */
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espaco-3);
+}
+
+.cards > article {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  transition: transform var(--transicao), box-shadow var(--transicao);
+}
+
+.cards > article:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-forte);
+}
+
+.cards > article img {
+  order: -1;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.cards > article > h3 {
+  margin: 0;
+  padding: var(--espaco-2) var(--espaco-2) var(--espaco-1);
+}
+
+.cards > article > p {
+  margin: 0 0 var(--espaco-1);
+  padding: 0 var(--espaco-2);
+}
+
+.cards > article > p:last-child {
+  margin-bottom: var(--espaco-2);
+}
+
+.preco {
+  font-weight: 700;
+  color: var(--cor-secundaria);
+}
+
+/* ==========================================================
+   7. BOTÕES E LINKS DE AÇÃO
+   ========================================================== */
+.botao,
+button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: var(--cor-secundaria);
+  border: 2px solid var(--cor-secundaria);
+  border-radius: var(--raio);
+  cursor: pointer;
+  transition: background-color var(--transicao), border-color var(--transicao),
+    color var(--transicao), transform var(--transicao), box-shadow var(--transicao);
+}
+
+.botao:hover,
+.botao:focus,
+button:hover,
+button:focus {
+  color: #ffffff;
+  background-color: var(--cor-secundaria-escura);
+  border-color: var(--cor-secundaria-escura);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra);
+}
+
+.botao-contorno {
+  color: var(--cor-secundaria);
+  background-color: transparent;
+}
+
+.hero .botao {
+  color: var(--cor-primaria);
+  background-color: var(--cor-destaque);
+  border-color: var(--cor-destaque);
+}
+
+.hero .botao:hover,
+.hero .botao:focus {
+  color: var(--cor-primaria);
+  background-color: var(--cor-texto-claro);
+  border-color: var(--cor-texto-claro);
+}
+
+/* ==========================================================
+   8. FORMULÁRIOS
+   ========================================================== */
+form {
+  display: grid;
+  gap: var(--espaco-2);
+}
+
+form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+label {
+  font-weight: 700;
+  color: var(--cor-primaria);
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  font-family: var(--fonte-corpo);
+  font-size: 1rem;
+  color: var(--cor-texto);
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  transition: border-color var(--transicao), box-shadow var(--transicao);
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--cor-secundaria);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--cor-secundaria);
+  box-shadow: 0 0 0 3px rgba(200, 150, 62, 0.45);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.filtro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--espaco-2);
+}
+
+.filtro select {
+  width: auto;
+  min-width: 220px;
+}
+
+.painel {
+  padding: var(--espaco-3);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+
+.cadastro {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espaco-3);
+}
+
+.cadastro > h1,
+.cadastro > p {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+
+.cadastro > section {
+  margin-bottom: 0;
+}
+
+/* ==========================================================
+   9. PÁGINA DE LOGIN
+   ========================================================== */
+.login-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: var(--espaco-4) var(--espaco-3);
+  text-align: center;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-forte);
+}
+
+.login-logo {
+  width: 120px;
+  height: auto;
+  margin: 0 auto var(--espaco-2);
+}
+
+.login-card form {
+  width: 100%;
+  max-width: 320px;
+  margin: var(--espaco-3) auto 0;
+  text-align: left;
+}
+
+/* ==========================================================
+   10. RODAPÉ
+   ========================================================== */
+footer {
+  padding: var(--espaco-3) var(--espaco-2);
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--cor-texto-claro);
+  background-color: var(--cor-primaria);
+}
+
+footer p {
+  margin: 0;
+}
+
+/* ==========================================================
+   11. RESPONSIVO: A PARTIR DE 768px (TABLET)
+   ========================================================== */
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--espaco-2) var(--espaco-4);
+  }
+
+  nav ul {
+    justify-content: flex-end;
+  }
+
+  main {
+    padding: var(--espaco-4) var(--espaco-3);
+  }
+
+  .hero {
+    flex-direction: row;
+    align-items: center;
+    padding: var(--espaco-4);
+  }
+
+  .hero > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .hero img {
+    width: auto;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================
+   12. RESPONSIVO: A PARTIR DE 1024px (DESKTOP)
+   ========================================================== */
+@media (min-width: 1024px) {
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cadastro {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+  }
+}
