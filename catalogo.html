@@ -1,17 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chapelaria DM HATS | Catálogo</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <header>
     <a class="marca" href="index.html">Chapelaria DM HATS</a>
+
     <nav aria-label="Navegação principal">
       <ul>
         <li><a href="index.html">Início</a></li>
@@ -28,62 +34,39 @@
 
     <section>
       <h2>Filtrar produtos</h2>
-      <form class="filtro" id="form-filtro" action="catalogo.html" method="get">
+
+      <form class="filtro" id="form-filtro">
         <div>
           <label for="filtro-tipo">Tipo</label>
+
           <select id="filtro-tipo" name="tipo">
             <option value="">Todos</option>
             <option value="CHAPEU_PRONTO">Chapéus prontos</option>
             <option value="ITEM_MONTAGEM">Itens para montagem</option>
           </select>
         </div>
+
         <button type="submit">Filtrar</button>
       </form>
     </section>
 
-    <section>
+    <p id="mensagem-catalogo" role="status"></p>
+
+    <section id="secao-chapeus">
       <h2>Chapéus prontos</h2>
-      <div class="cards">
-        <article>
-          <h3>Chapéu de couro</h3>
-          <img src="https://picsum.photos/seed/catalogo-couro/400/300" alt="Chapéu de couro artesanal" width="400" height="300">
-          <p>Chapéu artesanal de couro, com acabamento reforçado.</p>
-          <p class="preco">Preço: R$ 180,00</p>
-          <p>Estoque: 13 unidades</p>
-        </article>
-        <article>
-          <h3>Chapéu fedora</h3>
-          <img src="https://picsum.photos/seed/catalogo-fedora/400/300" alt="Chapéu fedora de edição limitada" width="400" height="300">
-          <p>Chapéu fedora de edição limitada.</p>
-          <p class="preco">Preço: R$ 150,00</p>
-          <p>Estoque: 6 unidades</p>
-        </article>
-      </div>
+      <div class="cards" id="lista-chapeus"></div>
     </section>
 
-    <section>
+    <section id="secao-montagem">
       <h2>Itens para montagem</h2>
-      <div class="cards">
-        <article>
-          <h3>Fita decorativa</h3>
-          <img src="https://picsum.photos/seed/catalogo-fita/400/300" alt="Fita decorativa para chapéu" width="400" height="300">
-          <p>Fita para personalizar o seu chapéu.</p>
-          <p class="preco">Preço: R$ 25,00</p>
-          <p>Estoque: 40 unidades</p>
-        </article>
-        <article>
-          <h3>Aba de couro</h3>
-          <img src="https://picsum.photos/seed/catalogo-aba/400/300" alt="Aba de couro reforçada para montagem" width="400" height="300">
-          <p>Aba reforçada de couro para montagem de chapéus.</p>
-          <p class="preco">Preço: R$ 60,00</p>
-          <p>Estoque: 15 unidades</p>
-        </article>
-      </div>
+      <div class="cards" id="lista-montagem"></div>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2026 Breno Henrique, Enzo Noah, Gustavo Santos, Júlio César e Matheus Henrique.</p>
   </footer>
+
+  <script type="module" src="js/catalogo.js"></script>
 </body>
 </html>
