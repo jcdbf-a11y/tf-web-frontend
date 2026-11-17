@@ -34,7 +34,7 @@
       <h1>Login do administrador</h1>
       <p>Acesso restrito a administradores da loja.</p>
 
-      <form id="form-login" action="#" method="post">
+      <form id="form-login">
         <div>
           <label for="email">E-mail</label>
           <input type="email"
@@ -54,6 +54,8 @@
         </div>
 
         <button type="submit">Entrar</button>
+
+        <p id="mensagem-login" role="status" aria-live="polite"></p>
       </form>
     </section>
   </main>
@@ -63,5 +65,6 @@
   </footer>
 
   <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/login.js"></script>
 </body>
 </html>
