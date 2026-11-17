@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalize seu Chapéu | DM HATS</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>DM HATS</h1>
+        <nav>
+            <ul id="menu-principal"></ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Personalize seu chapéu</h2>
+            <p>
+                Escolha o modelo, o tamanho e os adereços para criar
+                um chapéu do seu jeito!
+            </p>
+        </section>
+
+        <section>
+            <h2>1. Escolha o modelo</h2>
+
+            <label for="modelo-chapeu">Modelo do chapéu:</label>
+            <select id="modelo-chapeu" required>
+                <option value="">Carregando modelos...</option>
+            </select>
+
+            <div id="imagem-modelo"></div>
+            <p id="preco-modelo"></p>
+        </section>
+
+        <section>
+            <h2>2. Escolha o tamanho</h2>
+
+            <label for="tamanho-chapeu">Tamanho:</label>
+            <select id="tamanho-chapeu" required>
+                <option value="">Selecione um tamanho</option>
+                <option value="P">P - 54 a 55 cm</option>
+                <option value="M">M - 56 a 57 cm</option>
+                <option value="G">G - 58 a 59 cm</option>
+                <option value="GG">GG - 60 a 61 cm</option>
+            </select>
+
+            <p>
+                As medidas são referências provisórias.
+                Confirme a circunferência com a chapelaria antes da compra.
+            </p>
+        </section>
+
+        <section>
+            <h2>3. Escolha os adereços</h2>
+
+            <div id="lista-aderecos">
+                <p>Carregando adereços...</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Resumo da personalização</h2>
+
+            <div id="resumo-personalizacao">
+                <p>Escolha um modelo e os adereços para visualizar seu resumo.</p>
+            </div>
+
+            <h3>Preço estimado:</h3>
+            <p id="preco-total">R$ 0,00</p>
+
+            <button id="finalizar-personalizacao" type="button">
+                Solicitar pelo WhatsApp
+            </button>
+
+            <p id="mensagem-personalizacao" role="status"></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 DM HATS. Todos os direitos reservados.</p>
+    </footer>
+
+    <script type="module" src="js/menu.js"></script>
+    <script type="module" src="js/personalizar.js"></script>
+
+</body>
+</html>
