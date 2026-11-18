@@ -13,6 +13,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Uploadcare -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.css"
+  >
 </head>
 
 <body>
@@ -71,13 +77,55 @@
           <input type="number" id="editar-estoque" min="0" step="1" required>
         </div>
 
+        <!-- IMAGEM ATUAL -->
         <div>
-          <label for="editar-imagemUrl">URL da imagem:</label>
-          <input type="url" id="editar-imagemUrl">
+          <label>Imagem atual do produto:</label>
+
+          <img
+            id="preview-imagem-edicao"
+            alt="Imagem atual do produto"
+            hidden
+            style="display: block; max-width: 250px; max-height: 200px; object-fit: contain; margin: 10px 0;"
+          >
+        </div>
+
+        <!-- UPLOADCARE PARA EDIÇÃO -->
+        <div>
+          <label>Selecionar nova imagem (opcional):</label>
+
+          <uc-config
+            ctx-name="dmhats-edit-uploader"
+            pubkey="bbb20407cc96b79c911d"
+            source-list="local"
+            img-only="true"
+            accept="image/jpeg,image/png,image/webp"
+            multiple="false"
+            multiple-max="1"
+            max-local-file-size-bytes="8388608"
+          ></uc-config>
+
+          <uc-upload-ctx-provider
+            id="uploader-edicao-contexto"
+            ctx-name="dmhats-edit-uploader"
+          ></uc-upload-ctx-provider>
+
+          <uc-file-uploader-regular
+            ctx-name="dmhats-edit-uploader"
+          ></uc-file-uploader-regular>
+
+          <input
+            type="hidden"
+            id="editar-imagemUrl"
+          >
+
+          <p id="status-upload-edicao" role="status">
+            Selecione uma nova imagem somente se desejar substituir a atual.
+          </p>
         </div>
 
         <div>
           <label for="editar-tipo">Categoria:</label>
+
           <select id="editar-tipo" required>
             <option value="CHAPEU_PRONTO">Chapéu pronto</option>
             <option value="ITEM_MONTAGEM">Item para montagem</option>

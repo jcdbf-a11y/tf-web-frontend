@@ -2,6 +2,10 @@
 import { apiFetch } from './api.js';
 import { protegerPagina } from './auth.js';
 
+import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.js';
+
+UC.defineComponents(UC);
+
 protegerPagina();
 
 // ==========================================
@@ -23,7 +27,24 @@ const inputEstoque = document.getElementById('editar-estoque');
 const inputImagem = document.getElementById('editar-imagemUrl');
 const inputTipo = document.getElementById('editar-tipo');
 
+const previewImagem = document.getElementById('preview-imagem-edicao');
+const statusUpload = document.getElementById('status-upload-edicao');
+
 const botaoCancelar = document.getElementById('cancelar-edicao');
+
+// ==========================================
+// ELEMENTOS DO UPLOADCARE
+// ==========================================
+
+const contextoUploader = document.getElementById(
+  'uploader-edicao-contexto'
+);
+
+const apiUploader = contextoUploader.getAPI();
+
+let imagemOriginal = '';
+let uploadPendente = false;
+let uploadEmAndamento = false;
 
 // ==========================================
 // ELEMENTOS DOS SERVIÇOS
@@ -63,6 +84,119 @@ function formatarPreco(preco) {
     style: 'currency',
     currency: 'BRL'
   });
+}
+
+// ==========================================
+// UPLOADCARE NA EDIÇÃO
+// ==========================================
+
+// Quando uma imagem for selecionada
+contextoUploader.addEventListener('file-added', () => {
+  uploadPendente = true;
+
+  statusUpload.textContent =
+    'Imagem selecionada. Aguardando envio.';
+});
+
+// Quando o envio começar
+contextoUploader.addEventListener('file-upload-start', () => {
+  uploadEmAndamento = true;
+
+  statusUpload.textContent =
+    'Enviando imagem para o Uploadcare...';
+});
+
+// Quando o envio terminar
+contextoUploader.addEventListener('file-upload-success', (evento) => {
+  const arquivo = evento.detail;
+
+  if (!arquivo.cdnUrl) {
+    statusUpload.textContent =
+      'Não foi possível obter o endereço da imagem.';
+
+    return;
+  }
+
+  inputImagem.value = arquivo.cdnUrl;
+
+  previewImagem.src = arquivo.cdnUrl;
+  previewImagem.hidden = false;
+
+  uploadPendente = false;
+  uploadEmAndamento = false;
+
+  statusUpload.textContent =
+    'Nova imagem enviada com sucesso!';
+});
+
+// Quando a URL da imagem mudar
+contextoUploader.addEventListener('file-url-changed', (evento) => {
+  const arquivo = evento.detail;
+
+  if (arquivo.cdnUrl) {
+    inputImagem.value = arquivo.cdnUrl;
+
+    previewImagem.src = arquivo.cdnUrl;
+    previewImagem.hidden = false;
+
+    uploadPendente = false;
+    uploadEmAndamento = false;
+
+    statusUpload.textContent =
+      'Imagem atualizada com sucesso!';
+  }
+});
+
+// Quando ocorrer um erro no upload
+contextoUploader.addEventListener('file-upload-failed', () => {
+  uploadPendente = false;
+  uploadEmAndamento = false;
+
+  inputImagem.value = imagemOriginal;
+
+  if (imagemOriginal) {
+    previewImagem.src = imagemOriginal;
+    previewImagem.hidden = false;
+  } else {
+    previewImagem.hidden = true;
+  }
+
+  statusUpload.textContent =
+    'Falha ao enviar imagem. Tente novamente.';
+});
+
+// Quando uma imagem for removida do uploader
+contextoUploader.addEventListener('file-removed', () => {
+  uploadPendente = false;
+  uploadEmAndamento = false;
+
+  inputImagem.value = imagemOriginal;
+
+  if (imagemOriginal) {
+    previewImagem.src = imagemOriginal;
+    previewImagem.hidden = false;
+  } else {
+    previewImagem.hidden = true;
+  }
+
+  statusUpload.textContent =
+    'Imagem original mantida. Selecione outra se desejar.';
+});
+
+// Limpar o uploader
+function limparUploader() {
+  apiUploader.removeAllFiles();
+
+  imagemOriginal = '';
+  uploadPendente = false;
+  uploadEmAndamento = false;
+
+  inputImagem.value = '';
+  previewImagem.removeAttribute('src');
+  previewImagem.hidden = true;
+
+  statusUpload.textContent =
+    'Selecione uma nova imagem somente se desejar substituir a atual.';
 }
 
 // ==========================================
@@ -147,11 +281,14 @@ async function carregarProdutos() {
       listaProdutos.appendChild(criarCartao(produto));
     });
 
-    mensagem.textContent = `${produtos.length} produto(s) encontrado(s).`;
+    mensagem.textContent =
+      `${produtos.length} produto(s) encontrado(s).`;
 
   } catch (erro) {
     console.error('Erro ao carregar produtos:', erro);
-    mensagem.textContent = erro.message || 'Não foi possível carregar os produtos.';
+
+    mensagem.textContent =
+      erro.message || 'Não foi possível carregar os produtos.';
   }
 }
 
@@ -166,13 +303,28 @@ function editarProduto(id) {
     return;
   }
 
+  limparUploader();
+
   inputId.value = produto.id;
   inputNome.value = produto.nome;
   inputDescricao.value = produto.descricao;
   inputPreco.value = produto.preco;
   inputEstoque.value = produto.estoque;
-  inputImagem.value = produto.imagemUrl || '';
   inputTipo.value = produto.tipo;
+
+  imagemOriginal = produto.imagemUrl || '';
+  inputImagem.value = imagemOriginal;
+
+  if (imagemOriginal) {
+    previewImagem.src = imagemOriginal;
+    previewImagem.hidden = false;
+  } else {
+    previewImagem.hidden = true;
+  }
+
+  statusUpload.textContent = imagemOriginal
+    ? 'Imagem atual carregada. Selecione outra somente se desejar substituí-la.'
+    : 'Este produto ainda não possui imagem.';
 
   mensagemEdicao.textContent = '';
   secaoEdicao.hidden = false;
@@ -186,6 +338,13 @@ function editarProduto(id) {
 // Salvar alterações do produto
 formularioEdicao.addEventListener('submit', async (evento) => {
   evento.preventDefault();
+
+  if (uploadPendente || uploadEmAndamento) {
+    mensagemEdicao.textContent =
+      'Aguarde o envio da imagem terminar antes de salvar.';
+
+    return;
+  }
 
   const id = inputId.value;
 
@@ -217,12 +376,16 @@ formularioEdicao.addEventListener('submit', async (evento) => {
     secaoEdicao.hidden = true;
     formularioEdicao.reset();
 
+    limparUploader();
+
     await carregarProdutos();
 
   } catch (erro) {
     console.error('Erro ao atualizar produto:', erro);
+
     mensagemEdicao.textContent =
       erro.message || 'Não foi possível atualizar o produto.';
+
   } finally {
     botaoSalvar.disabled = false;
   }
@@ -231,6 +394,9 @@ formularioEdicao.addEventListener('submit', async (evento) => {
 // Cancelar edição de produto
 botaoCancelar.addEventListener('click', () => {
   formularioEdicao.reset();
+
+  limparUploader();
+
   secaoEdicao.hidden = true;
   mensagemEdicao.textContent = '';
 });
@@ -257,6 +423,7 @@ async function excluirProduto(id, nome) {
 
     if (inputId.value === String(id)) {
       formularioEdicao.reset();
+      limparUploader();
       secaoEdicao.hidden = true;
     }
 
@@ -264,6 +431,7 @@ async function excluirProduto(id, nome) {
 
   } catch (erro) {
     console.error('Erro ao excluir produto:', erro);
+
     mensagem.textContent =
       erro.message || 'Não foi possível excluir o produto.';
   }
@@ -339,6 +507,7 @@ async function carregarServicos() {
 
   } catch (erro) {
     console.error('Erro ao carregar serviços:', erro);
+
     mensagemServicos.textContent =
       erro.message || 'Não foi possível carregar os serviços.';
   }
@@ -406,8 +575,10 @@ formularioEdicaoServico.addEventListener('submit', async (evento) => {
 
   } catch (erro) {
     console.error('Erro ao atualizar serviço:', erro);
+
     mensagemEdicaoServico.textContent =
       erro.message || 'Não foi possível atualizar o serviço.';
+
   } finally {
     botaoSalvar.disabled = false;
   }
@@ -416,6 +587,7 @@ formularioEdicaoServico.addEventListener('submit', async (evento) => {
 // Cancelar edição de serviço
 botaoCancelarServico.addEventListener('click', () => {
   formularioEdicaoServico.reset();
+
   secaoEdicaoServico.hidden = true;
   mensagemEdicaoServico.textContent = '';
 });
@@ -449,6 +621,7 @@ async function excluirServico(id, nome) {
 
   } catch (erro) {
     console.error('Erro ao excluir serviço:', erro);
+
     mensagemServicos.textContent =
       erro.message || 'Não foi possível excluir o serviço.';
   }
