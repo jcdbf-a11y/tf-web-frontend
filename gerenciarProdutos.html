@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gerenciar Produtos | DM HATS</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <header>
+    <a class="marca" href="index.html">Chapelaria DM HATS</a>
+
+    <nav aria-label="Navegação principal">
+      <ul id="menu-principal"></ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Gerenciar Produtos</h1>
+
+    <p>
+      Aqui você poderá visualizar, editar e excluir os produtos cadastrados.
+    </p>
+
+    <section>
+      <h2>Produtos cadastrados</h2>
+
+      <p id="mensagem-gerenciamento" role="status">
+        Carregando produtos...
+      </p>
+
+      <div id="lista-produtos" class="cards"></div>
+    </section>
+
+    <section id="secao-edicao" hidden>
+      <h2>Editar produto</h2>
+
+      <form id="form-edicao">
+
+        <input type="hidden" id="editar-id">
+
+        <div>
+          <label for="editar-nome">Nome:</label>
+          <input type="text" id="editar-nome" required>
+        </div>
+
+        <div>
+          <label for="editar-descricao">Descrição:</label>
+          <textarea id="editar-descricao" required></textarea>
+        </div>
+
+        <div>
+          <label for="editar-preco">Preço:</label>
+          <input type="number" id="editar-preco" min="0" step="0.01" required>
+        </div>
+
+        <div>
+          <label for="editar-estoque">Estoque:</label>
+          <input type="number" id="editar-estoque" min="0" step="1" required>
+        </div>
+
+        <div>
+          <label for="editar-imagemUrl">URL da imagem:</label>
+          <input type="url" id="editar-imagemUrl">
+        </div>
+
+        <div>
+          <label for="editar-tipo">Categoria:</label>
+          <select id="editar-tipo" required>
+            <option value="CHAPEU_PRONTO">Chapéu pronto</option>
+            <option value="ITEM_MONTAGEM">Item para montagem</option>
+          </select>
+        </div>
+
+        <button type="submit">Salvar alterações</button>
+        <button type="button" id="cancelar-edicao">Cancelar</button>
+
+      </form>
+
+      <p id="mensagem-edicao" role="status"></p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 DM HATS. Todos os direitos reservados.</p>
+  </footer>
+
+  <script type="module" src="js/menu.js"></script>
+  <script type="module" src="js/gerenciarProdutos.js"></script>
+
+</body>
+</html>
