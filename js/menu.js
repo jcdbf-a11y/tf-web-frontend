@@ -26,7 +26,7 @@ if (menu) {
     return item;
   }
 
-  // Links disponíveis para todos os visitantes
+  // Links públicos
   menu.appendChild(criarLink('Início', 'index.html'));
   menu.appendChild(criarLink('Catálogo', 'catalogo.html'));
   menu.appendChild(criarLink('Serviços', 'servicos.html'));
@@ -36,6 +36,10 @@ if (menu) {
   if (estaLogado()) {
     menu.appendChild(
       criarLink('Cadastro de Produtos', 'cadastroProdutos.html')
+    );
+
+    menu.appendChild(
+      criarLink('Gerenciar Produtos', 'gerenciarProdutos.html')
     );
 
     const itemSair = criarLink('Sair', '#');
