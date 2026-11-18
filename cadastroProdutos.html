@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Chapelaria DM HATS | Cadastro de Produtos</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +13,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Estilos do Uploadcare -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.css"
+  >
 </head>
 
 <body>
@@ -25,12 +32,15 @@
 
   <main class="cadastro">
     <h1>Cadastro de Produtos</h1>
+
     <p>Área para administradores cadastrarem novos produtos e serviços.</p>
 
+    <!-- CADASTRO DE ITENS -->
     <section class="painel">
       <h2>Cadastrar item</h2>
 
       <form id="form-item">
+
         <div>
           <label for="item-nome">Nome</label>
           <input type="text" id="item-nome" name="nome" required>
@@ -51,13 +61,51 @@
           <input type="number" id="item-estoque" name="estoque" min="0" step="1" required>
         </div>
 
+        <!-- UPLOADCARE -->
         <div>
-          <label for="item-imagemUrl">URL da imagem</label>
-          <input type="url" id="item-imagemUrl" name="imagemUrl">
+          <label>Imagem do produto</label>
+
+          <uc-config
+            ctx-name="dmhats-uploader"
+            pubkey="bbb20407cc96b79c911d"
+            source-list="local"
+            img-only="true"
+            accept="image/jpeg,image/png,image/webp"
+            multiple="false"
+            multiple-max="1"
+            max-local-file-size-bytes="8388608"
+          ></uc-config>
+
+          <uc-upload-ctx-provider
+            id="uploader-contexto"
+            ctx-name="dmhats-uploader"
+          ></uc-upload-ctx-provider>
+
+          <uc-file-uploader-regular
+            ctx-name="dmhats-uploader"
+          ></uc-file-uploader-regular>
+
+          <input
+            type="hidden"
+            id="item-imagemUrl"
+            name="imagemUrl"
+          >
+
+          <img
+            id="preview-imagem-item"
+            alt="Pré-visualização da imagem selecionada"
+            hidden
+            style="max-width: 250px; height: auto; margin-top: 15px;"
+          >
+
+          <p id="status-uploadcare" role="status">
+            Selecione uma imagem de até 8 MB.
+          </p>
         </div>
 
         <div>
           <label for="item-tipo">Tipo</label>
+
           <select id="item-tipo" name="tipo" required>
             <option value="">Selecione</option>
             <option value="CHAPEU_PRONTO">Chapéu pronto</option>
@@ -66,15 +114,18 @@
         </div>
 
         <button type="submit">Cadastrar item</button>
+
       </form>
 
       <p id="mensagem-item" role="status"></p>
     </section>
 
+    <!-- CADASTRO DE SERVIÇOS -->
     <section class="painel">
       <h2>Cadastrar serviço</h2>
 
       <form id="form-servico">
+
         <div>
           <label for="servico-nome">Nome</label>
           <input type="text" id="servico-nome" name="nome" required>
@@ -91,6 +142,7 @@
         </div>
 
         <button type="submit">Cadastrar serviço</button>
+
       </form>
 
       <p id="mensagem-servico" role="status"></p>
@@ -103,5 +155,6 @@
 
   <script type="module" src="js/menu.js"></script>
   <script type="module" src="js/cadastroProdutos.js"></script>
+
 </body>
 </html>

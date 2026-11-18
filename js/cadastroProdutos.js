@@ -2,23 +2,128 @@
 import { apiFetch } from './api.js';
 import { protegerPagina } from './auth.js';
 
+// Uploadcare
+import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.js';
+
+UC.defineComponents(UC);
+
 protegerPagina();
 
+// ==========================================
+// UPLOADCARE
+// ==========================================
+
+const contextoUploader = document.getElementById('uploader-contexto');
+
+const inputImagem = document.getElementById('item-imagemUrl');
+const previewImagem = document.getElementById('preview-imagem-item');
+const statusUpload = document.getElementById('status-uploadcare');
+
+let uploadEmAndamento = false;
+
+// Quando uma imagem for selecionada
+contextoUploader.addEventListener('file-added', () => {
+  inputImagem.value = '';
+  previewImagem.hidden = true;
+
+  statusUpload.textContent = 'Imagem selecionada. Aguardando envio.';
+});
+
+// Quando o upload começar
+contextoUploader.addEventListener('file-upload-start', () => {
+  uploadEmAndamento = true;
+
+  statusUpload.textContent = 'Enviando imagem para o Uploadcare...';
+});
+
+// Quando o upload terminar
+contextoUploader.addEventListener('file-upload-success', (evento) => {
+  const arquivo = evento.detail;
+
+  if (!arquivo.cdnUrl) {
+    statusUpload.textContent =
+      'Não foi possível obter o endereço da imagem.';
+
+    return;
+  }
+
+  inputImagem.value = arquivo.cdnUrl;
+
+  previewImagem.src = arquivo.cdnUrl;
+  previewImagem.hidden = false;
+
+  uploadEmAndamento = false;
+
+  statusUpload.textContent = 'Imagem enviada com sucesso!';
+});
+
+// Quando a URL da imagem mudar
+contextoUploader.addEventListener('file-url-changed', (evento) => {
+  const arquivo = evento.detail;
+
+  if (arquivo.cdnUrl) {
+    inputImagem.value = arquivo.cdnUrl;
+
+    previewImagem.src = arquivo.cdnUrl;
+    previewImagem.hidden = false;
+
+    statusUpload.textContent = 'Imagem atualizada com sucesso!';
+  }
+});
+
+// Quando o upload falhar
+contextoUploader.addEventListener('file-upload-failed', () => {
+  uploadEmAndamento = false;
+
+  inputImagem.value = '';
+  previewImagem.hidden = true;
+
+  statusUpload.textContent =
+    'Falha ao enviar imagem. Tente novamente.';
+});
+
+// Quando a imagem for removida
+contextoUploader.addEventListener('file-removed', () => {
+  inputImagem.value = '';
+  previewImagem.hidden = true;
+
+  uploadEmAndamento = false;
+
+  statusUpload.textContent = 'Nenhuma imagem selecionada.';
+});
+
+// ==========================================
 // FORMULÁRIO DE ITENS
+// ==========================================
+
 const formularioItem = document.getElementById('form-item');
 const mensagemItem = document.getElementById('mensagem-item');
 
 formularioItem.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
-  const botao = formularioItem.querySelector('button[type="submit"]');
+  if (uploadEmAndamento) {
+    mensagemItem.textContent =
+      'Aguarde o envio da imagem terminar.';
+
+    return;
+  }
+
+  const botao = formularioItem.querySelector(
+    'button[type="submit"]'
+  );
 
   const dados = {
     nome: document.getElementById('item-nome').value.trim(),
+
     descricao: document.getElementById('item-descricao').value.trim(),
+
     preco: Number(document.getElementById('item-preco').value),
+
     estoque: Number(document.getElementById('item-estoque').value),
-    imagemUrl: document.getElementById('item-imagemUrl').value.trim(),
+
+    imagemUrl: inputImagem.value.trim(),
+
     tipo: document.getElementById('item-tipo').value
   };
 
@@ -36,23 +141,36 @@ formularioItem.addEventListener('submit', async (evento) => {
 
     formularioItem.reset();
 
+    inputImagem.value = '';
+    previewImagem.hidden = true;
+
+    statusUpload.textContent =
+      'Selecione uma imagem de até 8 MB.';
+
   } catch (erro) {
+    console.error('Erro ao cadastrar item:', erro);
+
     mensagemItem.textContent =
       erro.message || 'Erro ao cadastrar item.';
+
   } finally {
     botao.disabled = false;
   }
 });
 
-
+// ==========================================
 // FORMULÁRIO DE SERVIÇOS
+// ==========================================
+
 const formularioServico = document.getElementById('form-servico');
 const mensagemServico = document.getElementById('mensagem-servico');
 
 formularioServico.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
-  const botao = formularioServico.querySelector('button[type="submit"]');
+  const botao = formularioServico.querySelector(
+    'button[type="submit"]'
+  );
 
   const valorPreco = document.getElementById(
     'servico-precoEstimado'
@@ -60,10 +178,14 @@ formularioServico.addEventListener('submit', async (evento) => {
 
   const dados = {
     nome: document.getElementById('servico-nome').value.trim(),
+
     caracteristicas: document.getElementById(
       'servico-caracteristicas'
     ).value.trim(),
-    precoEstimado: valorPreco === '' ? null : Number(valorPreco)
+
+    precoEstimado: valorPreco === ''
+      ? null
+      : Number(valorPreco)
   };
 
   mensagemServico.textContent = 'Cadastrando serviço...';
@@ -81,8 +203,11 @@ formularioServico.addEventListener('submit', async (evento) => {
     formularioServico.reset();
 
   } catch (erro) {
+    console.error('Erro ao cadastrar serviço:', erro);
+
     mensagemServico.textContent =
       erro.message || 'Erro ao cadastrar serviço.';
+
   } finally {
     botao.disabled = false;
   }
