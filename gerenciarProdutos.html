@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Gerenciar Produtos | DM HATS</title>
+  <title>Gerenciamento | DM HATS</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,12 +26,13 @@
   </header>
 
   <main>
-    <h1>Gerenciar Produtos</h1>
+    <h1>Gerenciamento</h1>
 
     <p>
-      Aqui você poderá visualizar, editar e excluir os produtos cadastrados.
+      Aqui você poderá visualizar, editar e excluir produtos e serviços cadastrados.
     </p>
 
+    <!-- GERENCIAMENTO DE PRODUTOS -->
     <section>
       <h2>Produtos cadastrados</h2>
 
@@ -42,6 +43,7 @@
       <div id="lista-produtos" class="cards"></div>
     </section>
 
+    <!-- EDIÇÃO DE PRODUTOS -->
     <section id="secao-edicao" hidden>
       <h2>Editar produto</h2>
 
@@ -88,6 +90,48 @@
       </form>
 
       <p id="mensagem-edicao" role="status"></p>
+    </section>
+
+    <!-- GERENCIAMENTO DE SERVIÇOS -->
+    <section>
+      <h2>Serviços cadastrados</h2>
+
+      <p id="mensagem-servicos" role="status">
+        Carregando serviços...
+      </p>
+
+      <div id="lista-servicos" class="cards"></div>
+    </section>
+
+    <!-- EDIÇÃO DE SERVIÇOS -->
+    <section id="secao-edicao-servico" hidden>
+      <h2>Editar serviço</h2>
+
+      <form id="form-edicao-servico">
+
+        <input type="hidden" id="editar-servico-id">
+
+        <div>
+          <label for="editar-servico-nome">Nome:</label>
+          <input type="text" id="editar-servico-nome" required>
+        </div>
+
+        <div>
+          <label for="editar-servico-caracteristicas">Características:</label>
+          <textarea id="editar-servico-caracteristicas" required></textarea>
+        </div>
+
+        <div>
+          <label for="editar-servico-preco">Preço estimado:</label>
+          <input type="number" id="editar-servico-preco" min="0" step="0.01">
+        </div>
+
+        <button type="submit">Salvar alterações</button>
+        <button type="button" id="cancelar-edicao-servico">Cancelar</button>
+
+      </form>
+
+      <p id="mensagem-edicao-servico" role="status"></p>
     </section>
 
   </main>

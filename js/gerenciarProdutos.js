@@ -4,6 +4,10 @@ import { protegerPagina } from './auth.js';
 
 protegerPagina();
 
+// ==========================================
+// ELEMENTOS DOS PRODUTOS
+// ==========================================
+
 const listaProdutos = document.getElementById('lista-produtos');
 const mensagem = document.getElementById('mensagem-gerenciamento');
 
@@ -21,14 +25,49 @@ const inputTipo = document.getElementById('editar-tipo');
 
 const botaoCancelar = document.getElementById('cancelar-edicao');
 
+// ==========================================
+// ELEMENTOS DOS SERVIÇOS
+// ==========================================
+
+const listaServicos = document.getElementById('lista-servicos');
+const mensagemServicos = document.getElementById('mensagem-servicos');
+
+const secaoEdicaoServico = document.getElementById('secao-edicao-servico');
+const formularioEdicaoServico = document.getElementById('form-edicao-servico');
+const mensagemEdicaoServico = document.getElementById('mensagem-edicao-servico');
+
+const inputServicoId = document.getElementById('editar-servico-id');
+const inputServicoNome = document.getElementById('editar-servico-nome');
+const inputServicoCaracteristicas = document.getElementById('editar-servico-caracteristicas');
+const inputServicoPreco = document.getElementById('editar-servico-preco');
+
+const botaoCancelarServico = document.getElementById('cancelar-edicao-servico');
+
+// ==========================================
+// VARIÁVEIS
+// ==========================================
+
 let produtos = [];
+let servicos = [];
+
+// ==========================================
+// FORMATAÇÃO DE PREÇO
+// ==========================================
 
 function formatarPreco(preco) {
+  if (preco === null || preco === undefined || preco === '') {
+    return 'Preço sob consulta';
+  }
+
   return Number(preco).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   });
 }
+
+// ==========================================
+// GERENCIAMENTO DE PRODUTOS
+// ==========================================
 
 // Criar cartão de produto
 function criarCartao(produto) {
@@ -87,7 +126,7 @@ function criarCartao(produto) {
   return artigo;
 }
 
-// Carregar produtos da API
+// Carregar produtos
 async function carregarProdutos() {
   mensagem.textContent = 'Carregando produtos...';
   listaProdutos.replaceChildren();
@@ -116,10 +155,10 @@ async function carregarProdutos() {
   }
 }
 
-// Preencher formulário para edição
+// Editar produto
 function editarProduto(id) {
   const produto = produtos.find(
-    (item) => item.id === id
+    (item) => String(item.id) === String(id)
   );
 
   if (!produto) {
@@ -144,7 +183,7 @@ function editarProduto(id) {
   });
 }
 
-// Salvar alterações
+// Salvar alterações do produto
 formularioEdicao.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
@@ -189,7 +228,7 @@ formularioEdicao.addEventListener('submit', async (evento) => {
   }
 });
 
-// Cancelar edição
+// Cancelar edição de produto
 botaoCancelar.addEventListener('click', () => {
   formularioEdicao.reset();
   secaoEdicao.hidden = true;
@@ -230,5 +269,194 @@ async function excluirProduto(id, nome) {
   }
 }
 
-// Inicialização
+// ==========================================
+// GERENCIAMENTO DE SERVIÇOS
+// ==========================================
+
+// Criar cartão de serviço
+function criarCartaoServico(servico) {
+  const artigo = document.createElement('article');
+
+  const titulo = document.createElement('h3');
+  titulo.textContent = servico.nome;
+
+  const caracteristicas = document.createElement('p');
+  caracteristicas.textContent = servico.caracteristicas;
+
+  const preco = document.createElement('p');
+  preco.textContent = `Preço: ${formatarPreco(servico.precoEstimado)}`;
+
+  const botaoEditar = document.createElement('button');
+  botaoEditar.type = 'button';
+  botaoEditar.textContent = 'Editar';
+
+  botaoEditar.addEventListener('click', () => {
+    editarServico(servico.id);
+  });
+
+  const botaoExcluir = document.createElement('button');
+  botaoExcluir.type = 'button';
+  botaoExcluir.textContent = 'Excluir';
+
+  botaoExcluir.addEventListener('click', () => {
+    excluirServico(servico.id, servico.nome);
+  });
+
+  artigo.append(
+    titulo,
+    caracteristicas,
+    preco,
+    botaoEditar,
+    botaoExcluir
+  );
+
+  return artigo;
+}
+
+// Carregar serviços
+async function carregarServicos() {
+  mensagemServicos.textContent = 'Carregando serviços...';
+  listaServicos.replaceChildren();
+
+  try {
+    servicos = await apiFetch('/servicos');
+
+    if (!Array.isArray(servicos)) {
+      throw new Error('Formato de serviços inválido.');
+    }
+
+    if (servicos.length === 0) {
+      mensagemServicos.textContent = 'Nenhum serviço cadastrado.';
+      return;
+    }
+
+    servicos.forEach((servico) => {
+      listaServicos.appendChild(criarCartaoServico(servico));
+    });
+
+    mensagemServicos.textContent =
+      `${servicos.length} serviço(s) encontrado(s).`;
+
+  } catch (erro) {
+    console.error('Erro ao carregar serviços:', erro);
+    mensagemServicos.textContent =
+      erro.message || 'Não foi possível carregar os serviços.';
+  }
+}
+
+// Editar serviço
+function editarServico(id) {
+  const servico = servicos.find(
+    (item) => String(item.id) === String(id)
+  );
+
+  if (!servico) {
+    mensagemServicos.textContent = 'Serviço não encontrado.';
+    return;
+  }
+
+  inputServicoId.value = servico.id;
+  inputServicoNome.value = servico.nome;
+  inputServicoCaracteristicas.value = servico.caracteristicas;
+  inputServicoPreco.value = servico.precoEstimado ?? '';
+
+  mensagemEdicaoServico.textContent = '';
+  secaoEdicaoServico.hidden = false;
+
+  secaoEdicaoServico.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start'
+  });
+}
+
+// Salvar alterações do serviço
+formularioEdicaoServico.addEventListener('submit', async (evento) => {
+  evento.preventDefault();
+
+  const id = inputServicoId.value;
+
+  const dados = {
+    nome: inputServicoNome.value.trim(),
+    caracteristicas: inputServicoCaracteristicas.value.trim(),
+    precoEstimado: inputServicoPreco.value.trim() === ''
+      ? null
+      : Number(inputServicoPreco.value)
+  };
+
+  const botaoSalvar = formularioEdicaoServico.querySelector(
+    'button[type="submit"]'
+  );
+
+  botaoSalvar.disabled = true;
+  mensagemEdicaoServico.textContent = 'Salvando alterações...';
+
+  try {
+    const resposta = await apiFetch(`/servicos/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(dados)
+    });
+
+    mensagemEdicaoServico.textContent =
+      `Serviço "${resposta.nome}" atualizado com sucesso!`;
+
+    secaoEdicaoServico.hidden = true;
+    formularioEdicaoServico.reset();
+
+    await carregarServicos();
+
+  } catch (erro) {
+    console.error('Erro ao atualizar serviço:', erro);
+    mensagemEdicaoServico.textContent =
+      erro.message || 'Não foi possível atualizar o serviço.';
+  } finally {
+    botaoSalvar.disabled = false;
+  }
+});
+
+// Cancelar edição de serviço
+botaoCancelarServico.addEventListener('click', () => {
+  formularioEdicaoServico.reset();
+  secaoEdicaoServico.hidden = true;
+  mensagemEdicaoServico.textContent = '';
+});
+
+// Excluir serviço
+async function excluirServico(id, nome) {
+  const confirmar = window.confirm(
+    `Tem certeza de que deseja excluir o serviço "${nome}"? Esta ação não poderá ser desfeita.`
+  );
+
+  if (!confirmar) {
+    return;
+  }
+
+  mensagemServicos.textContent = `Excluindo "${nome}"...`;
+
+  try {
+    await apiFetch(`/servicos/${id}`, {
+      method: 'DELETE'
+    });
+
+    mensagemServicos.textContent =
+      `Serviço "${nome}" excluído com sucesso!`;
+
+    if (inputServicoId.value === String(id)) {
+      formularioEdicaoServico.reset();
+      secaoEdicaoServico.hidden = true;
+    }
+
+    await carregarServicos();
+
+  } catch (erro) {
+    console.error('Erro ao excluir serviço:', erro);
+    mensagemServicos.textContent =
+      erro.message || 'Não foi possível excluir o serviço.';
+  }
+}
+
+// ==========================================
+// INICIALIZAÇÃO
+// ==========================================
+
 carregarProdutos();
+carregarServicos();
