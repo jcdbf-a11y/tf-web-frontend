@@ -4,6 +4,9 @@ import { apiFetch } from './api.js';
 const listaServicos = document.getElementById('lista-servicos');
 const mensagem = document.getElementById('mensagem-servicos');
 
+// Número temporário do WhatsApp
+const WHATSAPP_NUMERO = '5538998445719';
+
 function formatarPreco(preco) {
   if (preco === null || preco === undefined) {
     return 'Preço sob consulta';
@@ -15,6 +18,26 @@ function formatarPreco(preco) {
   })}`;
 }
 
+// Criar link para o WhatsApp
+function criarBotaoWhatsApp(servico) {
+  const botao = document.createElement('a');
+
+  const textoMensagem =
+    `Olá! Tenho interesse em contratar o serviço "${servico.nome}". ` +
+    `Gostaria de obter mais informações e saber como posso contratá-lo.`;
+
+  botao.href =
+    `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(textoMensagem)}`;
+
+  botao.textContent = 'Contratar pelo WhatsApp';
+  botao.className = 'botao';
+  botao.target = '_blank';
+  botao.rel = 'noopener noreferrer';
+
+  return botao;
+}
+
+// Criar cartão de serviço
 function criarServico(servico) {
   const artigo = document.createElement('article');
 
@@ -28,11 +51,19 @@ function criarServico(servico) {
   preco.classList.add('preco');
   preco.textContent = formatarPreco(servico.precoEstimado);
 
-  artigo.append(titulo, caracteristicas, preco);
+  const botaoWhatsApp = criarBotaoWhatsApp(servico);
+
+  artigo.append(
+    titulo,
+    caracteristicas,
+    preco,
+    botaoWhatsApp
+  );
 
   return artigo;
 }
 
+// Carregar serviços
 async function carregarServicos() {
   mensagem.textContent = 'Carregando serviços...';
 
