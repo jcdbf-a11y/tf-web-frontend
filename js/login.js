@@ -24,13 +24,21 @@ formulario.addEventListener('submit', async (evento) => {
       })
     });
 
+    if (!resposta || !resposta.token) {
+      throw new Error('A API não retornou um token válido.');
+    }
+
     salvarToken(resposta.token);
 
     mensagem.textContent = 'Login realizado com sucesso!';
 
     window.location.href = 'cadastroProdutos.html';
+
   } catch (erro) {
-    mensagem.textContent = erro.message || 'Não foi possível realizar o login.';
+    mensagem.textContent =
+      erro.message || 'Não foi possível realizar o login.';
+
+  } finally {
     botaoEntrar.disabled = false;
   }
 });
