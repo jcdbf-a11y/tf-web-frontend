@@ -1,5 +1,6 @@
 
 import { apiFetch } from './api.js';
+import { exibirToast, removerToast } from './feedback.js';
 
 const formFiltro = document.getElementById('form-filtro');
 const filtroTipo = document.getElementById('filtro-tipo');
@@ -91,6 +92,11 @@ async function carregarProdutos(tipo = '') {
   secaoChapeus.hidden = false;
   secaoMontagem.hidden = false;
 
+  const toastCarregamento = exibirToast(
+    'Carregando produtos...',
+    'loading'
+  );
+
   try {
     let endpoint = '/items';
 
@@ -106,6 +112,12 @@ async function carregarProdutos(tipo = '') {
 
     if (produtos.length === 0) {
       mensagem.textContent = 'Nenhum produto encontrado.';
+
+      exibirToast(
+        'Nenhum produto encontrado.',
+        'warning'
+      );
+
       return;
     }
 
@@ -130,11 +142,24 @@ async function carregarProdutos(tipo = '') {
     mensagem.textContent =
       `${produtos.length} produto(s) encontrado(s).`;
 
+    exibirToast(
+      `${produtos.length} produto(s) encontrado(s)!`,
+      'success'
+    );
+
   } catch (erro) {
-    console.error(erro);
+    console.error('Erro ao carregar produtos:', erro);
 
     mensagem.textContent =
       'Não foi possível carregar os produtos. Tente novamente mais tarde.';
+
+    exibirToast(
+      erro.message || 'Não foi possível carregar os produtos.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
