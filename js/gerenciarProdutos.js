@@ -47,6 +47,16 @@ let imagemOriginal = '';
 let uploadPendente = false;
 let uploadEmAndamento = false;
 
+// Controle do Toast de carregamento da imagem
+let toastUploadImagem = null;
+
+function finalizarToastUpload() {
+  if (toastUploadImagem !== null) {
+    removerToast(toastUploadImagem);
+    toastUploadImagem = null;
+  }
+}
+
 // ==========================================
 // ELEMENTOS DOS SERVIÇOS
 // ==========================================
@@ -135,14 +145,25 @@ contextoUploader.addEventListener('file-upload-start', () => {
   statusUpload.textContent =
     'Enviando imagem para o Uploadcare...';
 
-  exibirToast('Enviando nova imagem...', 'loading');
+  // Evita acumular Toasts se o evento for disparado novamente.
+  finalizarToastUpload();
+
+  toastUploadImagem = exibirToast(
+    'Enviando nova imagem...',
+    'loading'
+  );
 });
 
 // Quando o envio terminar
 contextoUploader.addEventListener('file-upload-success', (evento) => {
   const arquivo = evento.detail;
 
-  if (!arquivo.cdnUrl) {
+  finalizarToastUpload();
+
+  uploadPendente = false;
+  uploadEmAndamento = false;
+
+  if (!arquivo?.cdnUrl) {
     statusUpload.textContent =
       'Não foi possível obter o endereço da imagem.';
 
@@ -159,9 +180,6 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
   previewImagem.src = arquivo.cdnUrl;
   previewImagem.hidden = false;
 
-  uploadPendente = false;
-  uploadEmAndamento = false;
-
   statusUpload.textContent =
     'Nova imagem enviada com sucesso!';
 
@@ -172,7 +190,9 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
 contextoUploader.addEventListener('file-url-changed', (evento) => {
   const arquivo = evento.detail;
 
-  if (arquivo.cdnUrl) {
+  if (arquivo?.cdnUrl) {
+    finalizarToastUpload();
+
     inputImagem.value = arquivo.cdnUrl;
 
     previewImagem.src = arquivo.cdnUrl;
@@ -188,6 +208,8 @@ contextoUploader.addEventListener('file-url-changed', (evento) => {
 
 // Quando ocorrer um erro no upload
 contextoUploader.addEventListener('file-upload-failed', () => {
+  finalizarToastUpload();
+
   uploadPendente = false;
   uploadEmAndamento = false;
 
@@ -208,6 +230,8 @@ contextoUploader.addEventListener('file-upload-failed', () => {
 
 // Quando uma imagem for removida do uploader
 contextoUploader.addEventListener('file-removed', () => {
+  finalizarToastUpload();
+
   uploadPendente = false;
   uploadEmAndamento = false;
 
@@ -226,6 +250,8 @@ contextoUploader.addEventListener('file-removed', () => {
 
 // Limpar o uploader
 function limparUploader() {
+  finalizarToastUpload();
+
   apiUploader.removeAllFiles();
 
   imagemOriginal = '';
