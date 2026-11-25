@@ -1,3 +1,4 @@
+
 /* ==========================================================
    1. VARIÁVEIS DO TEMA
    ========================================================== */
@@ -268,6 +269,14 @@ button {
     color var(--transicao), transform var(--transicao), box-shadow var(--transicao);
 }
 
+/* Espaçamento entre botões consecutivos */
+button + button,
+button + .botao,
+.botao + button,
+.botao + .botao {
+  margin-left: var(--espaco-1);
+}
+
 .botao:hover,
 .botao:focus,
 button:hover,
@@ -498,5 +507,23 @@ footer p {
   .cadastro {
     grid-template-columns: repeat(2, 1fr);
     align-items: start;
+  }
+}
+
+/* ==========================================================
+   13. AJUSTES PARA TELAS PEQUENAS
+   ========================================================== */
+@media (max-width: 480px) {
+  .login-card {
+    padding: var(--espaco-3) var(--espaco-2);
+  }
+
+  .painel {
+    padding: var(--espaco-2);
+  }
+
+  button,
+  .botao {
+    max-width: 100%;
   }
 }
