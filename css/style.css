@@ -269,12 +269,15 @@ button {
     color var(--transicao), transform var(--transicao), box-shadow var(--transicao);
 }
 
-/* Espaçamento entre botões consecutivos */
+/* Espaçamento e alinhamento entre botões consecutivos */
 button + button,
 button + .botao,
 .botao + button,
 .botao + .botao {
-  margin-left: var(--espaco-1);
+  display: block;
+  width: 100%;
+  margin-left: 0;
+  margin-top: 8px;
 }
 
 .botao:hover,
