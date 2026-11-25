@@ -1,6 +1,7 @@
 
 import { apiFetch } from './api.js';
 import { protegerPagina } from './auth.js';
+import { exibirToast, removerToast } from './feedback.js';
 
 import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.js';
 
@@ -72,6 +73,35 @@ let produtos = [];
 let servicos = [];
 
 // ==========================================
+// VALIDAÇÃO DOS CAMPOS OBRIGATÓRIOS
+// ==========================================
+
+function configurarAvisoCamposObrigatorios(formulario, mensagemAviso) {
+  let avisoExibido = false;
+
+  formulario.addEventListener('invalid', () => {
+    if (!avisoExibido) {
+      exibirToast(mensagemAviso, 'warning');
+      avisoExibido = true;
+
+      setTimeout(() => {
+        avisoExibido = false;
+      }, 1000);
+    }
+  }, true);
+}
+
+configurarAvisoCamposObrigatorios(
+  formularioEdicao,
+  'Preencha os campos obrigatórios do produto.'
+);
+
+configurarAvisoCamposObrigatorios(
+  formularioEdicaoServico,
+  'Preencha os campos obrigatórios do serviço.'
+);
+
+// ==========================================
 // FORMATAÇÃO DE PREÇO
 // ==========================================
 
@@ -104,6 +134,8 @@ contextoUploader.addEventListener('file-upload-start', () => {
 
   statusUpload.textContent =
     'Enviando imagem para o Uploadcare...';
+
+  exibirToast('Enviando nova imagem...', 'loading');
 });
 
 // Quando o envio terminar
@@ -113,6 +145,11 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
   if (!arquivo.cdnUrl) {
     statusUpload.textContent =
       'Não foi possível obter o endereço da imagem.';
+
+    exibirToast(
+      'Não foi possível obter o endereço da imagem.',
+      'error'
+    );
 
     return;
   }
@@ -127,6 +164,8 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
 
   statusUpload.textContent =
     'Nova imagem enviada com sucesso!';
+
+  exibirToast('Imagem enviada com sucesso!', 'success');
 });
 
 // Quando a URL da imagem mudar
@@ -163,6 +202,8 @@ contextoUploader.addEventListener('file-upload-failed', () => {
 
   statusUpload.textContent =
     'Falha ao enviar imagem. Tente novamente.';
+
+  exibirToast('Falha ao enviar imagem. Tente novamente.', 'error');
 });
 
 // Quando uma imagem for removida do uploader
@@ -265,6 +306,11 @@ async function carregarProdutos() {
   mensagem.textContent = 'Carregando produtos...';
   listaProdutos.replaceChildren();
 
+  const toastCarregamento = exibirToast(
+    'Carregando produtos...',
+    'loading'
+  );
+
   try {
     produtos = await apiFetch('/items');
 
@@ -274,6 +320,7 @@ async function carregarProdutos() {
 
     if (produtos.length === 0) {
       mensagem.textContent = 'Nenhum produto cadastrado.';
+      exibirToast('Nenhum produto cadastrado.', 'info');
       return;
     }
 
@@ -289,6 +336,14 @@ async function carregarProdutos() {
 
     mensagem.textContent =
       erro.message || 'Não foi possível carregar os produtos.';
+
+    exibirToast(
+      erro.message || 'Não foi possível carregar os produtos.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
@@ -300,6 +355,7 @@ function editarProduto(id) {
 
   if (!produto) {
     mensagem.textContent = 'Produto não encontrado.';
+    exibirToast('Produto não encontrado.', 'warning');
     return;
   }
 
@@ -343,6 +399,11 @@ formularioEdicao.addEventListener('submit', async (evento) => {
     mensagemEdicao.textContent =
       'Aguarde o envio da imagem terminar antes de salvar.';
 
+    exibirToast(
+      'Aguarde o envio da imagem terminar antes de salvar.',
+      'warning'
+    );
+
     return;
   }
 
@@ -364,6 +425,11 @@ formularioEdicao.addEventListener('submit', async (evento) => {
   botaoSalvar.disabled = true;
   mensagemEdicao.textContent = 'Salvando alterações...';
 
+  const toastCarregamento = exibirToast(
+    'Salvando alterações do produto...',
+    'loading'
+  );
+
   try {
     const resposta = await apiFetch(`/items/${id}`, {
       method: 'PUT',
@@ -372,6 +438,8 @@ formularioEdicao.addEventListener('submit', async (evento) => {
 
     mensagemEdicao.textContent =
       `Produto "${resposta.nome}" atualizado com sucesso!`;
+
+    exibirToast('Produto atualizado com sucesso!', 'success');
 
     secaoEdicao.hidden = true;
     formularioEdicao.reset();
@@ -386,7 +454,13 @@ formularioEdicao.addEventListener('submit', async (evento) => {
     mensagemEdicao.textContent =
       erro.message || 'Não foi possível atualizar o produto.';
 
+    exibirToast(
+      erro.message || 'Não foi possível atualizar o produto.',
+      'error'
+    );
+
   } finally {
+    removerToast(toastCarregamento);
     botaoSalvar.disabled = false;
   }
 });
@@ -413,6 +487,11 @@ async function excluirProduto(id, nome) {
 
   mensagem.textContent = `Excluindo "${nome}"...`;
 
+  const toastCarregamento = exibirToast(
+    `Excluindo produto "${nome}"...`,
+    'loading'
+  );
+
   try {
     await apiFetch(`/items/${id}`, {
       method: 'DELETE'
@@ -420,6 +499,8 @@ async function excluirProduto(id, nome) {
 
     mensagem.textContent =
       `Produto "${nome}" excluído com sucesso!`;
+
+    exibirToast('Produto excluído com sucesso!', 'success');
 
     if (inputId.value === String(id)) {
       formularioEdicao.reset();
@@ -434,6 +515,14 @@ async function excluirProduto(id, nome) {
 
     mensagem.textContent =
       erro.message || 'Não foi possível excluir o produto.';
+
+    exibirToast(
+      erro.message || 'Não foi possível excluir o produto.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
@@ -486,6 +575,11 @@ async function carregarServicos() {
   mensagemServicos.textContent = 'Carregando serviços...';
   listaServicos.replaceChildren();
 
+  const toastCarregamento = exibirToast(
+    'Carregando serviços...',
+    'loading'
+  );
+
   try {
     servicos = await apiFetch('/servicos');
 
@@ -495,6 +589,7 @@ async function carregarServicos() {
 
     if (servicos.length === 0) {
       mensagemServicos.textContent = 'Nenhum serviço cadastrado.';
+      exibirToast('Nenhum serviço cadastrado.', 'info');
       return;
     }
 
@@ -510,6 +605,14 @@ async function carregarServicos() {
 
     mensagemServicos.textContent =
       erro.message || 'Não foi possível carregar os serviços.';
+
+    exibirToast(
+      erro.message || 'Não foi possível carregar os serviços.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
@@ -521,6 +624,7 @@ function editarServico(id) {
 
   if (!servico) {
     mensagemServicos.textContent = 'Serviço não encontrado.';
+    exibirToast('Serviço não encontrado.', 'warning');
     return;
   }
 
@@ -559,6 +663,11 @@ formularioEdicaoServico.addEventListener('submit', async (evento) => {
   botaoSalvar.disabled = true;
   mensagemEdicaoServico.textContent = 'Salvando alterações...';
 
+  const toastCarregamento = exibirToast(
+    'Salvando alterações do serviço...',
+    'loading'
+  );
+
   try {
     const resposta = await apiFetch(`/servicos/${id}`, {
       method: 'PUT',
@@ -567,6 +676,8 @@ formularioEdicaoServico.addEventListener('submit', async (evento) => {
 
     mensagemEdicaoServico.textContent =
       `Serviço "${resposta.nome}" atualizado com sucesso!`;
+
+    exibirToast('Serviço atualizado com sucesso!', 'success');
 
     secaoEdicaoServico.hidden = true;
     formularioEdicaoServico.reset();
@@ -579,7 +690,13 @@ formularioEdicaoServico.addEventListener('submit', async (evento) => {
     mensagemEdicaoServico.textContent =
       erro.message || 'Não foi possível atualizar o serviço.';
 
+    exibirToast(
+      erro.message || 'Não foi possível atualizar o serviço.',
+      'error'
+    );
+
   } finally {
+    removerToast(toastCarregamento);
     botaoSalvar.disabled = false;
   }
 });
@@ -604,6 +721,11 @@ async function excluirServico(id, nome) {
 
   mensagemServicos.textContent = `Excluindo "${nome}"...`;
 
+  const toastCarregamento = exibirToast(
+    `Excluindo serviço "${nome}"...`,
+    'loading'
+  );
+
   try {
     await apiFetch(`/servicos/${id}`, {
       method: 'DELETE'
@@ -611,6 +733,8 @@ async function excluirServico(id, nome) {
 
     mensagemServicos.textContent =
       `Serviço "${nome}" excluído com sucesso!`;
+
+    exibirToast('Serviço excluído com sucesso!', 'success');
 
     if (inputServicoId.value === String(id)) {
       formularioEdicaoServico.reset();
@@ -624,6 +748,14 @@ async function excluirServico(id, nome) {
 
     mensagemServicos.textContent =
       erro.message || 'Não foi possível excluir o serviço.';
+
+    exibirToast(
+      erro.message || 'Não foi possível excluir o serviço.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
