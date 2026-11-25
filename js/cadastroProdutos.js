@@ -1,6 +1,7 @@
 
 import { apiFetch } from './api.js';
 import { protegerPagina } from './auth.js';
+import { exibirToast, removerToast } from './feedback.js';
 
 // Uploadcare
 import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/web/uc-file-uploader-regular.min.js';
@@ -8,6 +9,25 @@ import * as UC from 'https://cdn.jsdelivr.net/npm/@uploadcare/file-uploader@v1/w
 UC.defineComponents(UC);
 
 protegerPagina();
+
+// ==========================================
+// VALIDAÇÃO DOS CAMPOS OBRIGATÓRIOS
+// ==========================================
+
+function configurarAvisoCamposObrigatorios(formulario, mensagem) {
+  let avisoExibido = false;
+
+  formulario.addEventListener('invalid', () => {
+    if (!avisoExibido) {
+      exibirToast(mensagem, 'warning');
+      avisoExibido = true;
+
+      setTimeout(() => {
+        avisoExibido = false;
+      }, 1000);
+    }
+  }, true);
+}
 
 // ==========================================
 // UPLOADCARE
@@ -44,6 +64,8 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
     statusUpload.textContent =
       'Não foi possível obter o endereço da imagem.';
 
+    exibirToast('Não foi possível obter o endereço da imagem.', 'error');
+
     return;
   }
 
@@ -55,6 +77,8 @@ contextoUploader.addEventListener('file-upload-success', (evento) => {
   uploadEmAndamento = false;
 
   statusUpload.textContent = 'Imagem enviada com sucesso!';
+
+  exibirToast('Imagem enviada com sucesso!', 'success');
 });
 
 // Quando a URL da imagem mudar
@@ -80,6 +104,8 @@ contextoUploader.addEventListener('file-upload-failed', () => {
 
   statusUpload.textContent =
     'Falha ao enviar imagem. Tente novamente.';
+
+  exibirToast('Falha ao enviar imagem. Tente novamente.', 'error');
 });
 
 // Quando a imagem for removida
@@ -99,12 +125,19 @@ contextoUploader.addEventListener('file-removed', () => {
 const formularioItem = document.getElementById('form-item');
 const mensagemItem = document.getElementById('mensagem-item');
 
+configurarAvisoCamposObrigatorios(
+  formularioItem,
+  'Preencha os campos obrigatórios do produto.'
+);
+
 formularioItem.addEventListener('submit', async (evento) => {
   evento.preventDefault();
 
   if (uploadEmAndamento) {
     mensagemItem.textContent =
       'Aguarde o envio da imagem terminar.';
+
+    exibirToast('Aguarde o envio da imagem terminar.', 'warning');
 
     return;
   }
@@ -130,6 +163,11 @@ formularioItem.addEventListener('submit', async (evento) => {
   mensagemItem.textContent = 'Cadastrando item...';
   botao.disabled = true;
 
+  const toastCarregamento = exibirToast(
+    'Cadastrando produto...',
+    'loading'
+  );
+
   try {
     const resposta = await apiFetch('/items', {
       method: 'POST',
@@ -138,6 +176,8 @@ formularioItem.addEventListener('submit', async (evento) => {
 
     mensagemItem.textContent =
       `Item "${resposta.nome}" cadastrado com sucesso!`;
+
+    exibirToast('Produto cadastrado com sucesso!', 'success');
 
     formularioItem.reset();
 
@@ -153,7 +193,13 @@ formularioItem.addEventListener('submit', async (evento) => {
     mensagemItem.textContent =
       erro.message || 'Erro ao cadastrar item.';
 
+    exibirToast(
+      erro.message || 'Erro ao cadastrar produto.',
+      'error'
+    );
+
   } finally {
+    removerToast(toastCarregamento);
     botao.disabled = false;
   }
 });
@@ -164,6 +210,11 @@ formularioItem.addEventListener('submit', async (evento) => {
 
 const formularioServico = document.getElementById('form-servico');
 const mensagemServico = document.getElementById('mensagem-servico');
+
+configurarAvisoCamposObrigatorios(
+  formularioServico,
+  'Preencha os campos obrigatórios do serviço.'
+);
 
 formularioServico.addEventListener('submit', async (evento) => {
   evento.preventDefault();
@@ -191,6 +242,11 @@ formularioServico.addEventListener('submit', async (evento) => {
   mensagemServico.textContent = 'Cadastrando serviço...';
   botao.disabled = true;
 
+  const toastCarregamento = exibirToast(
+    'Cadastrando serviço...',
+    'loading'
+  );
+
   try {
     const resposta = await apiFetch('/servicos', {
       method: 'POST',
@@ -200,6 +256,8 @@ formularioServico.addEventListener('submit', async (evento) => {
     mensagemServico.textContent =
       `Serviço "${resposta.nome}" cadastrado com sucesso!`;
 
+    exibirToast('Serviço cadastrado com sucesso!', 'success');
+
     formularioServico.reset();
 
   } catch (erro) {
@@ -208,7 +266,13 @@ formularioServico.addEventListener('submit', async (evento) => {
     mensagemServico.textContent =
       erro.message || 'Erro ao cadastrar serviço.';
 
+    exibirToast(
+      erro.message || 'Erro ao cadastrar serviço.',
+      'error'
+    );
+
   } finally {
+    removerToast(toastCarregamento);
     botao.disabled = false;
   }
 });
