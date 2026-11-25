@@ -54,7 +54,7 @@ export async function apiFetch(endpoint, options = {}) {
       if (!mensagem) {
         switch (resposta.status) {
           case 401:
-            mensagem = 'Não autenticado. Verifique suas credenciais ou faça login novamente.';
+            mensagem = 'Sessão expirada ou não autenticada. Faça login novamente.';
             break;
 
           case 403:
@@ -67,6 +67,22 @@ export async function apiFetch(endpoint, options = {}) {
 
           default:
             mensagem = `Erro na requisição: HTTP ${resposta.status}`;
+        }
+      }
+
+      if (
+        resposta.status === 401 &&
+        token &&
+        endpoint !== '/adm/login'
+      ) {
+        localStorage.removeItem('token');
+
+        const paginaAtual = window.location.pathname;
+        const estaNaPaginaLogin = paginaAtual.endsWith('/login.html') ||
+          paginaAtual.endsWith('login.html');
+
+        if (!estaNaPaginaLogin) {
+          window.location.href = 'login.html';
         }
       }
 
