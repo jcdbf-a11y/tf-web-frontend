@@ -1,5 +1,6 @@
 
 import { apiFetch } from './api.js';
+import { exibirToast, removerToast } from './feedback.js';
 
 const listaServicos = document.getElementById('lista-servicos');
 const mensagem = document.getElementById('mensagem-servicos');
@@ -69,6 +70,11 @@ async function carregarServicos() {
 
   listaServicos.replaceChildren();
 
+  const toastCarregamento = exibirToast(
+    'Carregando serviços...',
+    'loading'
+  );
+
   try {
     const servicos = await apiFetch('/servicos');
 
@@ -77,7 +83,14 @@ async function carregarServicos() {
     }
 
     if (servicos.length === 0) {
-      mensagem.textContent = 'Nenhum serviço cadastrado no momento.';
+      mensagem.textContent =
+        'Nenhum serviço cadastrado no momento.';
+
+      exibirToast(
+        'Nenhum serviço cadastrado no momento.',
+        'warning'
+      );
+
       return;
     }
 
@@ -88,11 +101,24 @@ async function carregarServicos() {
     mensagem.textContent =
       `${servicos.length} serviço(s) encontrado(s).`;
 
+    exibirToast(
+      `${servicos.length} serviço(s) encontrado(s)!`,
+      'success'
+    );
+
   } catch (erro) {
     console.error('Erro ao carregar serviços:', erro);
 
     mensagem.textContent =
       'Não foi possível carregar os serviços. Tente novamente mais tarde.';
+
+    exibirToast(
+      erro.message || 'Não foi possível carregar os serviços.',
+      'error'
+    );
+
+  } finally {
+    removerToast(toastCarregamento);
   }
 }
 
